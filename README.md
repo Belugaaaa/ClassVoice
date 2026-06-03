@@ -1,5 +1,9 @@
 # ClassVoice
 
+<p align="center">
+  <img src="logo.png" alt="ClassVoice Logo" width="220">
+</p>
+
 ClassVoice 是一个本地课堂语音笔记助手，用于“语音交互”课程小项目 Demo。它提供一个简单的课堂 UI：上课、课间暂停、继续上课、下课并保存；课堂中可以用 Vosk 做本地语音识别，用 Qwen3-0.6B 在本地生成结构化课堂笔记。
 
 ## 功能
