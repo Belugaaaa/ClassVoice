@@ -1,0 +1,9 @@
+streamlit>=1.35
+pypdf>=4.2
+vosk>=0.3.45
+sounddevice>=0.4.6
+
+# Optional local LLM:
+# transformers>=4.45
+# torch
+# accelerate
