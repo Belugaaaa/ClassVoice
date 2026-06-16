@@ -1,10 +1,10 @@
 # ClassVoice
 
 <p align="center">
-  <img src="logo.png" alt="ClassVoice Logo" width="220">
+  <img src="logo.png" alt="ClassVoice Logo" width="760">
 </p>
 
-ClassVoice 是一个本地课堂语音笔记助手，用于“语音交互”课程小项目 Demo。它提供上课、课间暂停、继续上课、下课保存等课堂流程，支持 Vosk 本地语音识别、PDF 课件文本抽取、Qwen3-0.6B 本地笔记生成，以及面向后续优化的 QLoRA 微调数据接口。
+ClassVoice 是一个本地课堂语音笔记助手，用于“语音交互”课程项目 Demo。它提供上课、课间暂停、继续上课、下课保存等课堂流程，支持 Vosk 本地语音识别、PDF 课件文本抽取、Qwen3-0.6B 本地笔记生成，以及面向用户自定义优化的 QLoRA 微调数据接口。
 
 ## 功能
 
@@ -48,10 +48,10 @@ ClassVoice/
 运行时会生成：
 
 ```text
-data/sessions/      # 课堂记录，不提交 Git
-data/finetune/      # QLoRA 训练数据，不提交 Git
-models/             # Vosk/Qwen 模型权重，不提交 Git
-outputs/            # 微调输出，不提交 Git
+data/sessions/      # 课堂记录
+data/finetune/      # QLoRA 训练数据
+models/             # Vosk/Qwen 模型权重
+outputs/            # 微调输出
 ```
 
 ## 环境准备
@@ -199,7 +199,5 @@ python scripts/test_vosk_microphone.py --device 1 --sample-rate 44100
 ## 注意事项
 
 - `models/` 不提交 Git，请用户自行下载模型。
-- `data/sessions/` 不提交 Git，里面是本地课堂记录。
-- `data/finetune/` 不提交 Git，里面可能包含用户上传的课程材料。
 - 图片型 PDF 暂未做 OCR，当前只抽取 PDF 中可读取的文本。
 - Qwen3-0.6B 首次加载会占用一定显存/内存；CPU 也能运行，但生成较慢。
