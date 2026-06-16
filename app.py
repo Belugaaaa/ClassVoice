@@ -4,6 +4,7 @@ import streamlit as st
 
 from classvoice.llm import check_qwen_ready, generate_notes
 from classvoice.pdf_utils import extract_pdf_text
+from classvoice.finetune_data import DATASET_PATH, append_finetune_sample, count_samples, dataset_preview
 from classvoice.session_store import ClassSession, SessionStore
 from classvoice.speech import (
     SpeechConfig,
@@ -301,3 +302,67 @@ with bottom_right:
         st.success(f"已保存：{md_path}")
 
     st.code("data/sessions/", language="text")
+
+st.divider()
+st.subheader("QLoRA 微调数据接口")
+st.write("上传网课视频、音频、文本材料和对应人工笔记，生成本地 JSONL 训练集。训练集和媒体文件只保存在本地，不提交 Git。")
+
+ft_left, ft_right = st.columns([1, 1])
+
+with ft_left:
+    ft_title = st.text_input("样本标题", placeholder="例如：语音交互导论 第 1 讲")
+    ft_files = st.file_uploader(
+        "上传网课视频/音频/文本",
+        type=["mp4", "mov", "mkv", "mp3", "wav", "m4a", "aac", "txt", "md"],
+        accept_multiple_files=True,
+    )
+    ft_course_text = st.text_area(
+        "课程文本/课件文本",
+        height=140,
+        placeholder="可以粘贴字幕、课件文本、视频简介等。",
+    )
+    ft_transcript = st.text_area(
+        "视频/音频转写",
+        height=160,
+        placeholder="可以粘贴人工转写，或后续由 Vosk/其他 ASR 生成的转写。",
+    )
+
+with ft_right:
+    ft_note = st.text_area(
+        "对应标准笔记",
+        height=260,
+        placeholder="这里填写你希望模型学习输出的高质量课堂笔记。",
+    )
+    add_ft_disabled = not ft_note.strip() or (not ft_course_text.strip() and not ft_transcript.strip() and not ft_files)
+    if st.button("追加为 QLoRA 训练样本", disabled=add_ft_disabled, use_container_width=True):
+        sample = append_finetune_sample(
+            title=ft_title,
+            transcript=ft_transcript,
+            course_text=ft_course_text,
+            note=ft_note,
+            uploaded_files=ft_files,
+        )
+        st.success(f"已添加训练样本：{sample.id}")
+
+    st.metric("当前训练样本数", count_samples())
+    st.code(str(DATASET_PATH), language="text")
+
+    st.markdown("#### 训练命令")
+    st.code(
+        "pip install -r requirements-finetune.txt\n"
+        "python scripts/train_qlora.py --model-path models/qwen3-0.6b --dataset data/finetune/qlora_notes.jsonl",
+        language="powershell",
+    )
+
+preview_records = dataset_preview()
+if preview_records:
+    with st.expander("查看训练集预览"):
+        for record in preview_records:
+            st.json(
+                {
+                    "id": record.get("id"),
+                    "title": record.get("title"),
+                    "source_files": record.get("source_files", []),
+                    "messages": record.get("messages", [])[:3],
+                }
+            )

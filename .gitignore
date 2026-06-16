@@ -5,6 +5,8 @@ __pycache__/
 .streamlit/secrets.toml
 data/sessions/*.json
 data/sessions/*.md
+data/finetune/
+outputs/
 models/
 *.zip
 *.safetensors
